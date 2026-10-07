@@ -1,5 +1,6 @@
-# Port Scanner v1.0
+# Port Scanner v2.0
 # Created: 03.07.2026
+# Updated: 07.10.2026
 import socket
 
 # Windows category includes Active Directory
@@ -16,20 +17,27 @@ exit_code2 = True
 exit_code = True
 open_Port = []
 custom_port = []
-open_csport = []
+
+def scanning():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.settimeout(0.5)
+    result = s.connect_ex((ip_answer, port))
+    s.close()
+    if result == 0:
+        open_Port.append(f"[+]Open:{port}")
+    
 while exit_code:
     
     while True:
         print("=" * 45)
-        print("1 = basic scan   2 = custom scan")
-        print("EXIT           what will you choose?: ")
+        print("1 = basic scan                2 = custom scan")
+        print("EXIT       what will you choose?: ")
         print("=" * 45)
 
         user_answer = input()
         if user_answer.lower() == "exit":
             exit_code = False
             break
-             
             
         try:
             answer = int(user_answer)
@@ -57,16 +65,9 @@ while exit_code:
     if answer == 1:
         for categories in company_infrastructure:
             for port in categories:
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.settimeout(0.5)
-                        
-                result = s.connect_ex((ip_answer, port))
-                        
-                if result == 0:
-                    open_Port.append(f"[+]Open:{port}")
-                        
-            s.close()
+                scanning()
     print(open_Port)
+    open_Port.clear()
 
     if answer == 2: 
         while True:
@@ -87,10 +88,7 @@ while exit_code:
                 print("Error: You typed a letter or symbol!")
         
         for port in custom_port:
-            socks = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            socks.settimeout(0.5)
-            result = socks.connect_ex((ip_answer, port))
-
-            if result == 0:
-                open_csport.append(f"[+]Open:{port}")
-                print(open_csport)
+            scanning()
+        print(open_Port)
+        custom_port.clear()
+        open_Port.clear()
